@@ -1,13 +1,12 @@
-import React from 'react';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css'
 import Main from './components/Main';
+import store from './redux/store';
+import { Provider } from 'react-redux';
 
 function App() {
   return (
-    <div>
-      <Main/>
-    </div>
+    <Provider store={store}>
+      <Main />
+    </Provider>
   );
 }
 
