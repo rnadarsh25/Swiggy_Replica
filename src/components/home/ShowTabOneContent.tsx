@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
-import CustomCard from './CustomCard';
+import CustomCard from '../useComponents/CustomCard';
 import { connect } from 'react-redux';
-import { getData } from '../redux/actions/actionCreator';
-import { Props } from '../types.d';
+import { getData } from '../../redux/actions/actionCreator';
+import { Props } from '../../types.d';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,9 +21,7 @@ const ShowTabOneContent: React.FC<GetProps> = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(restaurantDetails);
     getData();
-    console.log(restaurantDetails);
   }, []);
 
   return (

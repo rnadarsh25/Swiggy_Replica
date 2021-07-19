@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
-import CustomCard from './CustomCard';
+import CustomCard from '../useComponents/CustomCard';
 
 const useStyles = makeStyles(() => ({
   root: {
