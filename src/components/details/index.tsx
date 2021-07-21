@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import MainInfo from './MainInfo';
 import FoodItems from './FoodItems';
@@ -8,11 +8,11 @@ type TParams = {
 };
 
 function Details({ match }: RouteComponentProps<TParams>) {
-  console.log(parseInt(match.params.id, 10));
+  const id = parseInt(match.params.id, 10);
   return (
     <div>
-      <MainInfo />
-      <FoodItems />
+      <MainInfo id={id} />
+      <FoodItems id={id} />
     </div>
   );
 }

@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import Header from './Header';
 import Home from './home';
 import Details from './details';
+import Checkout from './checkout';
+import Search from './Search';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
@@ -26,6 +28,9 @@ function Main() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/restaurants/:id" component={Details} />
+          <Route path="/checkout" component={Checkout} />
+          <Route path="/search" component={Search} />
+          <Redirect to="/" />
         </Switch>
       </div>
     </BrowserRouter>

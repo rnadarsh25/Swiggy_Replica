@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Paper,
@@ -8,6 +8,8 @@ import {
   OutlinedInput,
   Button,
 } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { fetchMenuWithID } from '../../redux/actions/actionCreator';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -48,13 +50,32 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MainInfo: React.FC = () => {
+const MainInfo: React.FC<any> = (props) => {
+  console.log(props.id);
+
+  useEffect(() => {
+    props.getMenus();
+    console.log(props.menuDetails);
+    console.log(props.restaurantDetails);
+  }, []);
+
+  const { id, restaurantId, foodname, price, img } = props.menuDetails;
+
+  useEffect(() => {
+    const theResta = props.restaurantDetails.filter(
+      (resta: any) => resta.id === id
+    );
+    console.log(theResta);
+  }, [props.restaurantDetails]);
+
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
       <Grid item xs={3}>
         <img
-          src="https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff"
+          src={
+            'https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c'
+          }
           width="80%"
           height="150"
         />
@@ -141,4 +162,15 @@ const MainInfo: React.FC = () => {
   );
 };
 
-export default MainInfo;
+const mapStateToProps = (state: any) => ({
+  menuDetails: state.data.menus,
+  restaurantDetails: state.data.allData,
+});
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    getMenus: () => dispatch({ type: 'GET_MENUS' }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainInfo);

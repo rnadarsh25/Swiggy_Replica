@@ -1,0 +1,74 @@
+{
+  "restaurants": [
+    {
+      "id": 0,
+      "name": "Gurukripa Restaurant - sarwate",
+      "variety": ["North Indian", "Thali", "Desserts"],
+      "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
+      "ratings": 4.5,
+      "timeReach": "27 mins"
+    },
+    {
+      "id": 1,
+      "name": "Hotel Rajhans",
+      "variety": ["South Indian", "Thali", "Desserts"],
+      "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
+      "ratings": 4.3,
+      "timeReach": "22 mins"
+    },
+    {
+      "id": 2,
+      "name": "Kamdhenu Foods",
+      "variety": ["Chinese", "Thali"],
+      "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
+      "ratings": 4.0,
+      "timeReach": "25 mins"
+    },
+    {
+      "id": 3,
+      "name": "Kwality Walls ",
+      "variety": ["Ice Cream"],
+      "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
+      "ratings": 4.5,
+      "timeReach": "10 mins"
+    },
+    {
+      "id": 4,
+      "name": "Jain Sweets & Kulfi",
+      "variety": ["Sweets", "Bakery"],
+      "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
+      "ratings": 4.5,
+      "timeReach": "30 mins"
+    }
+  ],
+  "menus": [
+    {
+      "id": 0,
+      "restaurantId": 0,
+      "foodname": "Chana Masala",
+      "price": 500,
+      "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
+    },
+    {
+      "id": 1,
+      "restaurantId": 3,
+      "foodname": "Chola Batura",
+      "price": 300,
+      "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
+    },
+    {
+      "id": 2,
+      "restaurantId": 2,
+      "foodname": "Noodles",
+      "price": 100,
+      "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
+    },
+    {
+      "id": 3,
+      "restaurantId": 0,
+      "foodname": "Poori Sabji",
+      "price": 200,
+      "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
+    }
+  ]
+}

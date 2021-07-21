@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 import reducerFunction from './reducerFunction';
-export default combineReducers({
+const rootReducer = combineReducers({
   data: reducerFunction,
 });
+
+export default rootReducer;

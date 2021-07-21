@@ -1,10 +1,25 @@
 import React from 'react';
-import { Grid, Paper, makeStyles, Typography, Button } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  makeStyles,
+  Typography,
+  Button,
+  Drawer,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  IconButton,
+  TextField,
+} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Link } from 'react-router-dom';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(() => ({
   mainPaper: {
@@ -21,34 +36,62 @@ const useStyles = makeStyles(() => ({
   locTypo: {
     fontsize: '18px',
   },
+  link: {
+    textDecoration: 'none',
+  },
+  drawer: {
+    // width: '100px',
+  },
+  cardRoot: {
+    maxWidth: '345',
+  },
+  loginBtn: {
+    background: 'orange',
+    color: 'white',
+    fontSize: '14px',
+    fontWeight: 600,
+    '&:hover': {
+      background: 'orange',
+    },
+  },
 }));
 
 interface Menu {
   name: string;
   icon: any;
+  route: string;
 }
 
 const allmenu: Menu[] = [
   {
     name: 'search',
     icon: <SearchIcon />,
+    route: '/search',
   },
   {
     name: 'help',
     icon: <HelpOutlineIcon />,
+    route: '/help',
   },
   {
     name: 'sign in',
     icon: <PersonOutlineIcon />,
+    route: '',
   },
   {
     name: 'cart',
     icon: <AddShoppingCartIcon />,
+    route: '/checkout',
   },
 ];
 
 const Header: React.FC = () => {
   const classes = useStyles();
+  const [state, setState] = React.useState(false);
+
+  const toggleDrawer = () => {
+    setState(!state);
+  };
 
   return (
     <div className={classes.mainPaper}>
@@ -64,13 +107,69 @@ const Header: React.FC = () => {
         <Grid item xs={7} container justifyContent="flex-end">
           {allmenu.map((menu, index) => (
             <Grid item xs={2} key={index}>
-              <Button startIcon={menu.icon} className={classes.menuButton}>
-                {menu.name}
-              </Button>
+              {menu.name !== 'sign in' ? (
+                <Link to={menu.route} className={classes.link}>
+                  <Button startIcon={menu.icon} className={classes.menuButton}>
+                    {menu.name}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  onClick={toggleDrawer}
+                  startIcon={menu.icon}
+                  className={classes.menuButton}
+                >
+                  {menu.name}
+                </Button>
+              )}
             </Grid>
           ))}
         </Grid>
       </Grid>
+
+      <Drawer
+        anchor="right"
+        open={state}
+        onClose={toggleDrawer}
+        className={classes.drawer}
+      >
+        <Card variant="outlined" className={classes.cardRoot}>
+          <CardHeader
+            avatar={
+              <IconButton onClick={toggleDrawer}>
+                <CloseIcon />
+              </IconButton>
+            }
+          />
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={9}>
+                <Typography variant="h4" component="h4">
+                  Login
+                </Typography>
+                <Typography variant="body2" component="p">
+                  or Create an account
+                </Typography>
+              </Grid>
+              <Grid item xs={3} container>
+                <img
+                  src="https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_147,h_140/Image-login_btpq7r"
+                  width="100"
+                  height="100"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField label="Phone" fullWidth variant="outlined" />
+              </Grid>
+              <Grid item xs={12}>
+                <Button size="large" fullWidth className={classes.loginBtn}>
+                  Login
+                </Button>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Drawer>
     </div>
   );
 };
