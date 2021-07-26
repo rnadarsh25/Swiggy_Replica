@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { FoodContext } from '../details/FoodItems';
 import {
   Grid,
   Paper,
@@ -8,8 +9,10 @@ import {
   Button,
   Tab,
 } from '@material-ui/core';
+
 import ShowItems from './ShowItems';
 import ItemCard from '../useComponents/ItemCard';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles(() => ({
   tabSection: {
@@ -51,19 +54,30 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ShowFoodItemsWithTab() {
+// const TabPanel = (props: any) => {
+//   const { children, value, index } = props;
+//   return <div>{value === index ? children : null}</div>;
+// };
+
+const ShowFoodItemsWithTab: React.FC<any> = (props) => {
+  const { menuDetails } = props;
+
+  const { totalOrder, setTotalOrder } = useContext<any>(FoodContext);
+
+  let setcategories = new Set();
+  menuDetails.forEach((menu: any) => setcategories.add(menu.category));
+
+  console.log(setcategories);
+  const categories: string[] = [];
+
+  setcategories.forEach((cat: any) => categories.push(cat));
+
   const [value, setValue] = useState(0);
-  const [menu, setMenu] = useState('Recommended');
-  const allMenus: string[] = [
-    'Recommended',
-    'Swiggy Special Combos',
-    'Rice & Birayani',
-    'Desserts',
-    'Juice',
-  ];
+  const [menu, setMenu] = useState(categories[0]);
+
   const handleValueChange = (e: any, newValue: number) => {
     setValue(newValue);
-    setMenu(allMenus[newValue]);
+    setMenu(categories[newValue]);
   };
   const classes = useStyles();
   return (
@@ -78,16 +92,33 @@ function ShowFoodItemsWithTab() {
           onChange={handleValueChange}
           scrollButtons="auto"
         >
-          <Tab label="Recommended"></Tab>
-          <Tab label="Swiggy Special Combos"></Tab>
-          <Tab label="Rice & Birayani"></Tab>
-          <Tab label="Desserts"></Tab>
-          <Tab label="juice"></Tab>
+          {categories.map((category: any, index: number) => (
+            <Tab key={index} label={category} />
+          ))}
         </Tabs>
       </Grid>
-      <ShowItems menu={menu} />
+      <Grid item xs={8} container>
+        <Grid item xs={12}>
+          <Typography variant="h4" component="h4">
+            {menu}
+          </Typography>
+          <Typography variant="body2" component="p" color="textSecondary">
+            17 items
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          {menuDetails.map((item: any, index: number) => (
+            <ItemCard
+              key={index}
+              item={item}
+              totalOrder={totalOrder}
+              setTotalOrder={setTotalOrder}
+            />
+          ))}
+        </Grid>
+      </Grid>
     </Grid>
   );
-}
+};
 
 export default ShowFoodItemsWithTab;

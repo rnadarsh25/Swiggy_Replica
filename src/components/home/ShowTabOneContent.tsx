@@ -4,6 +4,7 @@ import CustomCard from '../useComponents/CustomCard';
 import { connect } from 'react-redux';
 // import { getData, fetchDataSaga } from '../../redux/actions/actionCreator';
 import { Props } from '../../types.d';
+import { useState } from 'react';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -19,15 +20,19 @@ interface GetProps {
 const ShowTabOneContent: React.FC<any> = (props) => {
   const { restaurantDetails } = props;
   const classes = useStyles();
+  const [showData, setShowData] = useState([]);
 
   useEffect(() => {
     props.getData();
+    setShowData(restaurantDetails);
   }, []);
+
+  console.log(restaurantDetails);
 
   return (
     <Grid container spacing={1} className={classes.root}>
-      {restaurantDetails.length > 0
-        ? restaurantDetails.map((detail: Props, index: number) => (
+      {showData.length > 0
+        ? showData.map((detail: Props, index: number) => (
             <Grid item xs={3} key={index}>
               <CustomCard data={detail} />
             </Grid>
@@ -39,7 +44,6 @@ const ShowTabOneContent: React.FC<any> = (props) => {
 
 const mapStateToProps = (state: any) => ({
   restaurantDetails: state.data.allData,
-  newValue: state.data.value,
 });
 
 const mapDispatchToProps = (dispatch: any) => {

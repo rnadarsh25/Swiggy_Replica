@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { connect } from 'react-redux';
+
 import {
   Grid,
   Paper,
@@ -7,8 +9,10 @@ import {
   Typography,
   Button,
   Tab,
+  ButtonGroup,
 } from '@material-ui/core';
 import StarRateIcon from '@material-ui/icons/StarRate';
+import { FoodContext } from '../details/FoodItems';
 
 const useStyles = makeStyles(() => ({
   tabSection: {
@@ -50,12 +54,40 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ItemCard() {
-  const [value, setValue] = useState(0);
-  const handleValueChange = (e: any, newValue: number) => {
-    setValue(newValue);
-  };
+const ItemCard: React.FC<any> = (props) => {
+  const { item, totalOrder, setTotalOrder, addOrder, orderCart } = props;
+  const { id, restaurantId, category, foodname, price, img } = item;
   const classes = useStyles();
+  const [orderCount, setOrderCount] = useState(0);
+
+  const updateOrder = () => {
+    let getOrder: any[] = totalOrder;
+
+    let foodArr = {
+      name: foodname,
+      price: price,
+      count: orderCount,
+    };
+
+    getOrder[id] = foodArr;
+    setTotalOrder(getOrder);
+    addOrder(totalOrder);
+  };
+
+  const handleAddBtn = () => {
+    setOrderCount(orderCount + 1);
+  };
+
+  const handleSubBtn = () => {
+    setOrderCount(orderCount - 1);
+  };
+
+  useEffect(() => {
+    if (orderCount !== 0) {
+      updateOrder();
+    }
+  }, [orderCount]);
+
   return (
     <Grid container className={classes.cardRoot}>
       <Grid item xs={9} container className={classes.infoGrid}>
@@ -71,22 +103,18 @@ function ItemCard() {
         </Grid>
         <Grid item xs={12}>
           <Button disableRipple size="large" className={classes.itemBtn}>
-            Chana Masala
+            {foodname}
           </Button>
         </Grid>
         <Grid item xs={12}>
           <Button disableRipple size="small">
-            Rs. 500
+            Rs. {price}
           </Button>
         </Grid>
       </Grid>
       <Grid item xs={3} container>
         <Grid item xs={12}>
-          <img
-            src="https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
-            width="100%"
-            height="120"
-          />
+          <img src={img} width="100%" height="120" />
         </Grid>
         <Grid
           item
@@ -95,13 +123,36 @@ function ItemCard() {
           justifyContent="center"
           className={classes.addBtnGrid}
         >
-          <Button variant="contained" color="secondary">
-            Add
-          </Button>
+          {orderCount === 0 ? (
+            <Button
+              onClick={handleAddBtn}
+              variant="contained"
+              color="secondary"
+            >
+              Add
+            </Button>
+          ) : (
+            <ButtonGroup variant="contained" size="small" color="secondary">
+              <Button onClick={handleSubBtn}>-</Button>
+              <Button>{orderCount}</Button>
+              <Button onClick={handleAddBtn}>+</Button>
+            </ButtonGroup>
+          )}
         </Grid>
       </Grid>
     </Grid>
   );
-}
+};
 
-export default ItemCard;
+const mapStateToProps = (state: any) => ({
+  orderCart: state.data.order,
+});
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    addOrder: (orderArr: any) =>
+      dispatch({ type: 'ADD_ORDER', order: orderArr }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ItemCard);

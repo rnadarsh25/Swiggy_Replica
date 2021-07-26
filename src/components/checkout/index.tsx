@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -86,8 +87,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CheckLogin() {
+const CheckLogin: React.FC<any> = (props) => {
+  const { user, active, setActive } = props;
+
   const classes = useStyles();
+  if (user) {
+    setActive(1);
+  }
   return (
     <Grid container className={classes.loginCheckGrid} spacing={2}>
       <Grid item xs={8} container>
@@ -101,16 +107,29 @@ function CheckLogin() {
           </Typography>
         </Grid>
         <Grid item xs={12} container spacing={1}>
-          <Grid item xs={6}>
-            <Button fullWidth variant="contained" color="primary">
-              Log in
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button fullWidth variant="contained" color="secondary">
-              sign up
-            </Button>
-          </Grid>
+          {user === true ? (
+            <Typography variant="h6" component="h6">
+              Adarsh | 1234567891
+            </Typography>
+          ) : (
+            <>
+              <Grid item xs={6}>
+                <Button
+                  onClick={() => setActive(active + 1)}
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
+                  Log in
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button fullWidth variant="contained" color="secondary">
+                  sign up
+                </Button>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Grid>
       <Grid item xs={4} container justifyContent="flex-end">
@@ -122,9 +141,10 @@ function CheckLogin() {
       </Grid>
     </Grid>
   );
-}
+};
 
-function CheckDelivery() {
+const CheckDelivery: React.FC<any> = (props) => {
+  const { active, setActive } = props;
   const classes = useStyles();
   return (
     <Grid container className={classes.loginCheckGrid} spacing={2}>
@@ -137,84 +157,88 @@ function CheckDelivery() {
           You have a saved address in this location.
         </Typography>
       </Grid>
-      <Grid item xs={12} container spacing={2}>
-        <Grid item xs={6}>
-          <Card variant="outlined">
-            <CardHeader
-              avatar={
-                <Icon>
-                  <HomeIcon />
-                </Icon>
-              }
-              title={
-                <Typography variant="h6" component="h4">
-                  Home
-                </Typography>
-              }
-              subheader="Parshuram Nagar, Rewa, MP."
-            />
+      {active === 1 ? (
+        <Grid item xs={12} container spacing={2}>
+          <Grid item xs={6}>
+            <Card variant="outlined">
+              <CardHeader
+                avatar={
+                  <Icon>
+                    <HomeIcon />
+                  </Icon>
+                }
+                title={
+                  <Typography variant="h6" component="h4">
+                    Home
+                  </Typography>
+                }
+                subheader="Parshuram Nagar, Rewa, MP."
+              />
 
-            <CardContent>
-              <Button
-                className={classes.timeBtn}
-                disableRipple
-                disableElevation
-              >
-                37 mins
-              </Button>
-              <div>
+              <CardContent>
                 <Button
-                  className={classes.delBtn}
-                  variant="contained"
-                  color="secondary"
+                  className={classes.timeBtn}
+                  disableRipple
+                  disableElevation
                 >
-                  Delivery
+                  37 mins
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card variant="outlined">
-            <CardHeader
-              avatar={
-                <Icon>
-                  <LocationOnIcon />
-                </Icon>
-              }
-              title={
-                <Typography variant="h6" component="h4">
-                  Add new address
-                </Typography>
-              }
-              subheader="Rewa, MP, India"
-            />
+                <div>
+                  <Button
+                    onClick={() => setActive(active + 1)}
+                    className={classes.delBtn}
+                    variant="contained"
+                    color="secondary"
+                  >
+                    Delivery
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card variant="outlined">
+              <CardHeader
+                avatar={
+                  <Icon>
+                    <LocationOnIcon />
+                  </Icon>
+                }
+                title={
+                  <Typography variant="h6" component="h4">
+                    Add new address
+                  </Typography>
+                }
+                subheader="Rewa, MP, India"
+              />
 
-            <CardContent>
-              <div className={classes.emptyDiv}></div>
-              <div>
-                <Button
-                  className={classes.addressBtn}
-                  variant="outlined"
-                  color="secondary"
-                >
-                  Add new
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              <CardContent>
+                <div className={classes.emptyDiv}></div>
+                <div>
+                  <Button
+                    className={classes.addressBtn}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Add new
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      ) : null}
     </Grid>
   );
-}
+};
 
 const TabPanel = (props: any) => {
   const { children, value, index } = props;
   return <div>{value === index ? children : null}</div>;
 };
 
-function CheckPayment() {
+const CheckPayment: React.FC<any> = (props) => {
+  const { setActive, active } = props;
   const [value, setValue] = useState(0);
   const handleValueChange = (e: any, newValue: number) => {
     setValue(newValue);
@@ -244,109 +268,64 @@ function CheckPayment() {
           Choose Payment Method
         </Typography>
       </Grid>
-      <Grid item xs={12} container>
-        <Grid item xs={3}>
-          <Tabs
-            value={value}
-            orientation="vertical"
-            onChange={handleValueChange}
-          >
-            <Tab label="Wallet" />
-            <Tab label="Debit Card" />
-          </Tabs>
+      {active === 2 ? (
+        <Grid item xs={12} container>
+          <Grid item xs={3}>
+            <Tabs
+              value={value}
+              orientation="vertical"
+              onChange={handleValueChange}
+            >
+              <Tab label="Wallet" />
+              <Tab label="Debit Card" />
+            </Tabs>
+          </Grid>
+          <Grid item xs={9}>
+            <TabPanel value={value} index={0}>
+              {wallet.map((pay, index) => (
+                <Card
+                  onClick={() => setActive(0)}
+                  variant="outlined"
+                  className={classes.payCard}
+                  key={index}
+                >
+                  <CardContent>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12}>
+                        <img src={pay.logo} width="100" height="30" />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="h6" component="h6">
+                          {pay.name}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button className={classes.linkBtn}>
+                          Link Account
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabPanel>
+          </Grid>
         </Grid>
-        <Grid item xs={9}>
-          <TabPanel value={value} index={0}>
-            {wallet.map((pay, index) => (
-              <Card variant="outlined" className={classes.payCard} key={index}>
-                <CardContent>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <img src={pay.logo} width="100" height="30" />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="h6" component="h6">
-                        {pay.name}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button className={classes.linkBtn}>Link Account</Button>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            ))}
-          </TabPanel>
-        </Grid>
-      </Grid>
+      ) : null}
     </Grid>
   );
-}
+};
 
-function getSteps() {
-  return [<CheckLogin />, <CheckDelivery />, <CheckPayment />];
-}
-
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return 'Select campaign settings...';
-    case 1:
-      return 'What is an ad group anyways?';
-    case 2:
-      return 'This is the bit I really care about!';
-    default:
-      return 'Unknown step';
-  }
-}
-
-function Checkout() {
+const Checkout: React.FC<any> = (props) => {
+  const { user } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
-  const steps = getSteps();
 
-  const isStepOptional = (step: number) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
-
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  const steps = [
+    <CheckLogin user={user} active={activeStep} setActive={setActiveStep} />,
+    <CheckDelivery active={activeStep} setActive={setActiveStep} />,
+    <CheckPayment active={activeStep} setActive={setActiveStep} />,
+  ];
 
   return (
     <Grid container className={classes.root}>
@@ -357,67 +336,22 @@ function Checkout() {
           orientation="vertical"
         >
           {steps.map((label, index) => {
-            const stepProps = {};
-            const labelProps = {};
             return (
-              <Step key={index} {...stepProps}>
+              <Step key={index}>
                 <StepLabel>{label}</StepLabel>
               </Step>
             );
           })}
         </Stepper>
-        <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&apos;re finished
-              </Typography>
-              <Button onClick={handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Typography className={classes.instructions}>
-                {getStepContent(activeStep)}
-              </Typography>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                {isStepOptional(activeStep) && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSkip}
-                    className={classes.button}
-                  >
-                    Skip
-                  </Button>
-                )}
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
       </Grid>
       <Grid item xs={3}>
         <CartDetails />
       </Grid>
     </Grid>
   );
-}
+};
+const mapStateToProps = (state: any) => ({
+  user: state.data.checkUser,
+});
 
-export default Checkout;
+export default connect(mapStateToProps, null)(Checkout);

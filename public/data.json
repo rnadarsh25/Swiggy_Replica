@@ -3,7 +3,7 @@
     {
       "id": 0,
       "name": "Gurukripa Restaurant - sarwate",
-      "variety": ["North Indian", "Thali", "Desserts"],
+      "variety": "North Indian, Thali, Desserts",
       "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
       "ratings": 4.5,
       "timeReach": "27 mins"
@@ -11,7 +11,7 @@
     {
       "id": 1,
       "name": "Hotel Rajhans",
-      "variety": ["South Indian", "Thali", "Desserts"],
+      "variety": "South Indian, Thali, Desserts",
       "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
       "ratings": 4.3,
       "timeReach": "22 mins"
@@ -19,15 +19,15 @@
     {
       "id": 2,
       "name": "Kamdhenu Foods",
-      "variety": ["Chinese", "Thali"],
+      "variety": "Chinese, Thali",
       "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
-      "ratings": 4.0,
+      "ratings": 4.2,
       "timeReach": "25 mins"
     },
     {
       "id": 3,
       "name": "Kwality Walls ",
-      "variety": ["Ice Cream"],
+      "variety": "Ice Cream",
       "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
       "ratings": 4.5,
       "timeReach": "10 mins"
@@ -35,7 +35,7 @@
     {
       "id": 4,
       "name": "Jain Sweets & Kulfi",
-      "variety": ["Sweets", "Bakery"],
+      "variety": "Sweets, Bakery",
       "image": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/g8qifv6jfpx0whdlqbff",
       "ratings": 4.5,
       "timeReach": "30 mins"
@@ -45,6 +45,7 @@
     {
       "id": 0,
       "restaurantId": 0,
+      "category": "Recommended",
       "foodname": "Chana Masala",
       "price": 500,
       "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
@@ -52,6 +53,7 @@
     {
       "id": 1,
       "restaurantId": 3,
+      "category": "Recommended",
       "foodname": "Chola Batura",
       "price": 300,
       "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
@@ -59,6 +61,7 @@
     {
       "id": 2,
       "restaurantId": 2,
+      "category": "Recommended",
       "foodname": "Noodles",
       "price": 100,
       "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
@@ -66,6 +69,7 @@
     {
       "id": 3,
       "restaurantId": 0,
+      "category": "Recommended",
       "foodname": "Poori Sabji",
       "price": 200,
       "img": "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Grid,
   makeStyles,
@@ -57,149 +58,178 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function CartDetails() {
+const CartDetails: React.FC<any> = (props) => {
+  const { theRestaurant, orderCart } = props;
+  console.log(theRestaurant, orderCart);
+
+  let totalCost: number = 0;
+  let deliveryCharge: number = 51;
+
+  orderCart.forEach((cart: any) => {
+    totalCost = totalCost + cart.count * cart.price;
+  });
+
+  const { id, name, variety, image, ratings, timeReach } = theRestaurant;
   const classes = useStyles();
   return (
     <Grid container>
-      <Grid item xs={12} container className={classes.root}>
-        <Grid item xs={12}>
-          <CardHeader
-            avatar={
-              <img
-                src="https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c"
-                width="50"
-                height="50"
-              />
-            }
-            title="Rajhans Restaurant"
-            subheader="Rewa Local"
-          />
-        </Grid>
-        <Grid item xs={12} container>
-          <Grid
-            item
-            xs={4}
-            container
-            alignItems="center"
-            className={classes.itemTypo}
-          >
-            <Typography variant="body2" component="p" color="textPrimary">
-              Chana Masala
-            </Typography>
+      {orderCart.length > 0 ? (
+        <Grid item xs={12} container className={classes.root}>
+          <Grid item xs={12}>
+            <CardHeader
+              avatar={<img src={image} width="50" height="50" />}
+              title={name}
+              subheader="Rewa Local"
+            />
           </Grid>
-          <Grid
-            item
-            xs={6}
-            container
-            justifyContent="center"
-            alignItems="center"
-          >
-            <ButtonGroup
-              className={classes.btnGrp}
-              size="small"
-              variant="outlined"
-            >
-              <Button>-</Button>
-              <Button>1</Button>
-              <Button>+</Button>
-            </ButtonGroup>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            container
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            <Typography variant="body2" component="p" color="textPrimary">
-              Rs.500
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <List>
-            <ListItem dense>
-              <ListItemText
-                primary={
+          <Grid item xs={12} container>
+            {orderCart.map((cartItem: any, index: number) => (
+              <React.Fragment key={index}>
+                <Grid
+                  item
+                  xs={4}
+                  container
+                  alignItems="center"
+                  className={classes.itemTypo}
+                >
                   <Typography variant="body2" component="p" color="textPrimary">
-                    Bill Details
+                    {cartItem.name}
                   </Typography>
-                }
-              />
-            </ListItem>
-            <ListItem dense>
-              <ListItemText
-                primary={
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <ButtonGroup
+                    className={classes.btnGrp}
+                    size="small"
+                    variant="outlined"
+                  >
+                    <Button>-</Button>
+                    <Button>{cartItem.count}</Button>
+                    <Button>+</Button>
+                  </ButtonGroup>
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  container
+                  justifyContent="flex-end"
+                  alignItems="center"
+                >
+                  <Typography variant="body2" component="p" color="textPrimary">
+                    Rs.{cartItem.count * cartItem.price}
+                  </Typography>
+                </Grid>
+              </React.Fragment>
+            ))}
+          </Grid>
+          <Grid item xs={12}>
+            <List>
+              <ListItem dense>
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      color="textPrimary"
+                    >
+                      Bill Details
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <ListItem dense>
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      color="textSecondary"
+                    >
+                      Item Total
+                    </Typography>
+                  }
+                />
+                <ListItemSecondaryAction>
                   <Typography
                     variant="body2"
                     component="p"
                     color="textSecondary"
                   >
-                    Item Total
+                    Rs. {totalCost}
                   </Typography>
-                }
-              />
-              <ListItemSecondaryAction>
-                <Typography variant="body2" component="p" color="textSecondary">
-                  Rs. 500
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem dense>
-              <ListItemText
-                primary={
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem dense>
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      color="textSecondary"
+                    >
+                      Delivery partner fee
+                    </Typography>
+                  }
+                />
+                <ListItemSecondaryAction>
                   <Typography
                     variant="body2"
                     component="p"
                     color="textSecondary"
                   >
-                    Delivery partner fee
+                    Rs. {deliveryCharge}
                   </Typography>
-                }
-              />
-              <ListItemSecondaryAction>
-                <Typography variant="body2" component="p" color="textSecondary">
-                  Rs. 51
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem dense>
-              <ListItemText
-                primary={
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider />
+              <ListItem dense>
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      color="textSecondary"
+                    >
+                      Taxes and Charges
+                    </Typography>
+                  }
+                />
+                <ListItemSecondaryAction>
                   <Typography
                     variant="body2"
                     component="p"
                     color="textSecondary"
                   >
-                    Taxes and Charges
+                    Rs. 0
                   </Typography>
-                }
-              />
-              <ListItemSecondaryAction>
-                <Typography variant="body2" component="p" color="textSecondary">
-                  Rs. 0
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider light />
-            <ListItem dense>
-              <ListItemText
-                primary={
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider light />
+              <ListItem dense>
+                <ListItemText
+                  primary={
+                    <Typography className={classes.payTypo} color="textPrimary">
+                      To Pay
+                    </Typography>
+                  }
+                />
+                <ListItemSecondaryAction>
                   <Typography className={classes.payTypo} color="textPrimary">
-                    To Pay
+                    Rs. {totalCost + deliveryCharge}
                   </Typography>
-                }
-              />
-              <ListItemSecondaryAction>
-                <Typography className={classes.payTypo} color="textPrimary">
-                  Rs. 551
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+          </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        'Cart is Empty'
+      )}
       <Grid item xs={12} container className={classes.root}>
         <Card variant="outlined">
           <CardHeader
@@ -225,6 +255,11 @@ function CartDetails() {
       </Grid>
     </Grid>
   );
-}
+};
 
-export default CartDetails;
+const mapStatetoProps = (state: any) => ({
+  theRestaurant: state.data.theRestaurant,
+  orderCart: state.data.order,
+});
+
+export default connect(mapStatetoProps, null)(CartDetails);

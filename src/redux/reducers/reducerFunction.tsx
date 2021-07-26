@@ -2,8 +2,9 @@ import * as actions from '../actions/types';
 const initialState = {
   allData: [],
   menus: [],
-  sagaData: [],
-  value: 20,
+  theRestaurant: {},
+  order: [],
+  checkUser: false,
 };
 export default function (state = initialState, action: any) {
   switch (action.type) {
@@ -17,15 +18,20 @@ export default function (state = initialState, action: any) {
         ...state,
         menus: action.value,
       };
-    case actions.FETCH_DATA_SAGA:
+    case 'GET_RESTAURANT_ASYNC':
       return {
         ...state,
-        // sagaData: action.payload.data,
+        theRestaurant: action.value,
       };
-    case 'ADD_ASYNC':
+    case 'ADD_ORDER_ASYNC':
       return {
         ...state,
-        value: action.value,
+        order: action.value,
+      };
+    case 'CHECK_USER_ASYNC':
+      return {
+        ...state,
+        checkUser: true,
       };
     default:
       return state;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Grid,
   Paper,
@@ -85,9 +86,31 @@ const allmenu: Menu[] = [
   },
 ];
 
-const Header: React.FC = () => {
+const Header: React.FC<any> = (props) => {
+  const { user, checkUser } = props;
   const classes = useStyles();
   const [state, setState] = React.useState(false);
+  const [userPhone, setUserPhone] = React.useState('');
+  const [msg, setMsg] = React.useState('');
+
+  const handlePhoneChange = (e: any) => {
+    setUserPhone(e.target.value);
+  };
+
+  const handleLogin = () => {
+    if (userPhone.length < 0 || userPhone.length > 10) {
+      setMsg('Invalid Phone Number! Try Again');
+    } else {
+      if (userPhone !== '1234567891') {
+        setMsg('Mobile Number is incorrect!');
+      } else {
+        setMsg('');
+        alert('Logged in successfully');
+        checkUser();
+        setState(false);
+      }
+    }
+  };
 
   const toggleDrawer = () => {
     setState(!state);
@@ -97,7 +120,9 @@ const Header: React.FC = () => {
     <div className={classes.mainPaper}>
       <Grid container>
         <Grid item xs={1}>
-          <img src="./logo.png" width="40px" height="50px" />
+          <Link to="/">
+            <img src="./logo.png" width="40px" height="50px" />
+          </Link>
         </Grid>
         <Grid item xs={4}>
           <Button className={classes.menuButton} endIcon={<ExpandMoreIcon />}>
@@ -159,10 +184,23 @@ const Header: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField label="Phone" fullWidth variant="outlined" />
+                <TextField
+                  required
+                  label="Phone"
+                  value={userPhone}
+                  onChange={handlePhoneChange}
+                  fullWidth
+                  variant="outlined"
+                  helperText={msg}
+                />
               </Grid>
               <Grid item xs={12}>
-                <Button size="large" fullWidth className={classes.loginBtn}>
+                <Button
+                  onClick={handleLogin}
+                  size="large"
+                  fullWidth
+                  className={classes.loginBtn}
+                >
                   Login
                 </Button>
               </Grid>
@@ -174,4 +212,14 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+const mapStateToProps = (state: any) => ({
+  user: state.data.checkUser,
+});
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    checkUser: () => dispatch({ type: 'CHECK_USER' }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

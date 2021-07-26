@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   btn: {
-    padding: '1px',
+    padding: '0px',
     '&:hover': {
       background: 'transparent',
     },
@@ -60,9 +60,7 @@ const CustomCard: React.FC<GetProps> = (props) => {
         <CardContent>
           <Typography className={classes.restaTypo}>{name}</Typography>
           <Typography variant="body2" component="p" color="textSecondary">
-            {variety.map((vr, index) => (
-              <span key={index}>{vr} </span>
-            ))}
+            {variety}
           </Typography>
         </CardContent>
         <CardActions>

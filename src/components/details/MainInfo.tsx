@@ -51,49 +51,32 @@ const useStyles = makeStyles(() => ({
 }));
 
 const MainInfo: React.FC<any> = (props) => {
-  console.log(props.id);
-
   useEffect(() => {
-    props.getMenus();
-    console.log(props.menuDetails);
-    console.log(props.restaurantDetails);
-  }, []);
+    props.getRestaurantWithId(props.id);
+  }, [props.id]);
 
-  const { id, restaurantId, foodname, price, img } = props.menuDetails;
-
-  useEffect(() => {
-    const theResta = props.restaurantDetails.filter(
-      (resta: any) => resta.id === id
-    );
-    console.log(theResta);
-  }, [props.restaurantDetails]);
+  const { id, name, variety, image, ratings, timeReach } = props.theRestaurant;
 
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
       <Grid item xs={3}>
-        <img
-          src={
-            'https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/nszdiddxplz2awump76c'
-          }
-          width="80%"
-          height="150"
-        />
+        <img src={image} width="80%" height="150" />
       </Grid>
       <Grid item xs={5} container justifyContent="flex-start" spacing={1}>
         <Grid item xs={12}>
           <Typography variant="h4" component="h2">
-            Hotel Rajhans
+            {name}
           </Typography>
           <Typography variant="body2" component="p">
-            Thali Rajasthani, Desserts
+            {variety}
           </Typography>
         </Grid>
         <Grid item xs={12} container>
           <Grid item xs={4}>
             <div className={classes.btnSpan}>
               <Typography variant="h6" component="h2">
-                * 4.3
+                * {ratings}
               </Typography>
               <Typography variant="body2" component="p">
                 100+ ratings
@@ -103,7 +86,7 @@ const MainInfo: React.FC<any> = (props) => {
           <Grid item xs={4}>
             <div className={classes.btnSpan}>
               <Typography variant="h6" component="h2">
-                27 mins
+                {timeReach}
               </Typography>
               <Typography variant="body2" component="p">
                 Delivery time
@@ -163,13 +146,13 @@ const MainInfo: React.FC<any> = (props) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  menuDetails: state.data.menus,
-  restaurantDetails: state.data.allData,
+  theRestaurant: state.data.theRestaurant,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getMenus: () => dispatch({ type: 'GET_MENUS' }),
+    getRestaurantWithId: (id: number) =>
+      dispatch({ type: 'GET_RESTAURANT', theID: id }),
   };
 };
 
