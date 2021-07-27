@@ -10,8 +10,7 @@ import {
   Tab,
 } from '@material-ui/core';
 
-import ShowItems from './ShowItems';
-import ItemCard from '../useComponents/ItemCard';
+import ItemCard from './ItemCard';
 import { useEffect } from 'react';
 
 const useStyles = makeStyles(() => ({

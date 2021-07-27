@@ -12,7 +12,7 @@ import {
   ButtonGroup,
 } from '@material-ui/core';
 import StarRateIcon from '@material-ui/icons/StarRate';
-import { FoodContext } from '../details/FoodItems';
+import { FoodContext } from './FoodItems';
 
 const useStyles = makeStyles(() => ({
   tabSection: {
@@ -55,24 +55,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ItemCard: React.FC<any> = (props) => {
-  const { item, totalOrder, setTotalOrder, addOrder, orderCart } = props;
+  const {
+    item,
+    totalOrder,
+    setTotalOrder,
+    addOrder,
+    myCheck,
+    setMyCheck,
+    cartIdArr,
+  } = props;
   const { id, restaurantId, category, foodname, price, img } = item;
   const classes = useStyles();
-  const [orderCount, setOrderCount] = useState(0);
-
-  const updateOrder = () => {
-    let getOrder: any[] = totalOrder;
-
-    let foodArr = {
-      name: foodname,
-      price: price,
-      count: orderCount,
-    };
-
-    getOrder[id] = foodArr;
-    setTotalOrder(getOrder);
-    addOrder(totalOrder);
-  };
+  const [orderCount, setOrderCount] = useState(
+    cartIdArr[id] ? cartIdArr[id] : 0
+  );
 
   const handleAddBtn = () => {
     setOrderCount(orderCount + 1);
@@ -84,7 +80,20 @@ const ItemCard: React.FC<any> = (props) => {
 
   useEffect(() => {
     if (orderCount !== 0) {
-      updateOrder();
+      let getOrder: any[] = totalOrder;
+
+      let foodArr = {
+        id: id,
+        name: foodname,
+        price: price,
+        count: orderCount,
+      };
+
+      getOrder[id] = foodArr;
+      setTotalOrder(getOrder);
+      addOrder(totalOrder);
+
+      setMyCheck(myCheck + 1);
     }
   }, [orderCount]);
 
@@ -144,15 +153,4 @@ const ItemCard: React.FC<any> = (props) => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  orderCart: state.data.order,
-});
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addOrder: (orderArr: any) =>
-      dispatch({ type: 'ADD_ORDER', order: orderArr }),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ItemCard);
+export default ItemCard;

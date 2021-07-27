@@ -5,6 +5,8 @@ const initialState = {
   theRestaurant: {},
   order: [],
   checkUser: false,
+  newUser: false,
+  user: {},
 };
 export default function (state = initialState, action: any) {
   switch (action.type) {
@@ -32,6 +34,19 @@ export default function (state = initialState, action: any) {
       return {
         ...state,
         checkUser: true,
+        user: action.value,
+      };
+    case 'NEW_USER_ASYNC':
+      return {
+        ...state,
+        newUser: true,
+      };
+    case 'LOGOUT_ASYNC':
+      return {
+        ...state,
+        checkUser: false,
+        newUser: false,
+        user: {},
       };
     default:
       return state;

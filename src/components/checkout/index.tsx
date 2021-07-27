@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { getUser } from '../../api/getData';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -18,6 +19,7 @@ import {
   Icon,
   Tabs,
   Tab,
+  TextField,
 } from '@material-ui/core';
 import CartDetails from './CartDetails';
 
@@ -88,11 +90,45 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CheckLogin: React.FC<any> = (props) => {
-  const { user, active, setActive } = props;
+  const { user, active, setActive, checkUser } = props;
 
+  const [mobile, setMobile] = useState('');
+  const [openLogin, setOpenLogin] = useState(false);
+  const [msg, setMsg] = React.useState('');
+  const [newUser, setnewUser] = useState(false);
+  const [loggedUser, setLoggedUser] = useState();
+
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target;
+    setMobile(value);
+  };
+
+  const handleLogin = () => {
+    if (mobile == '' || mobile.length < 0 || mobile.length > 10) {
+      setMsg('Invalid Phone Number! Try Again');
+    } else {
+      setMsg('');
+      // alert('Logged in successfully');
+      const nowUser = getUser(mobile);
+      nowUser
+        .then((res) => {
+          if (res) {
+            setLoggedUser(res);
+            checkUser(res);
+            setOpenLogin(!openLogin);
+            setActive(active + 1);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  console.log(user);
   const classes = useStyles();
-  if (user) {
+  if (user.name) {
     setActive(1);
+  } else {
+    setActive(0);
   }
   return (
     <Grid container className={classes.loginCheckGrid} spacing={2}>
@@ -107,27 +143,61 @@ const CheckLogin: React.FC<any> = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} container spacing={1}>
-          {user === true ? (
+          {user.name ? (
             <Typography variant="h6" component="h6">
-              Adarsh | 1234567891
+              {user.name} | {user.mobile}
             </Typography>
           ) : (
             <>
-              <Grid item xs={6}>
-                <Button
-                  onClick={() => setActive(active + 1)}
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Log in
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button fullWidth variant="contained" color="secondary">
-                  sign up
-                </Button>
-              </Grid>
+              {openLogin === false ? (
+                <>
+                  <Grid item xs={6}>
+                    <Button
+                      onClick={() => setOpenLogin(!openLogin)}
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                    >
+                      Log in
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button fullWidth variant="contained" color="secondary">
+                      sign up
+                    </Button>
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item xs={12} container spacing={1}>
+                    <Grid item xs={12}>
+                      <Typography variant="h6" component="h6">
+                        Login here
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6} container>
+                      <Grid item xs={12}>
+                        <TextField
+                          value={mobile}
+                          onChange={handleInputChange}
+                          fullWidth
+                          margin="normal"
+                          type="text"
+                          placeholder="Enter Mobile"
+                          required
+                        />
+                        <Button
+                          onClick={handleLogin}
+                          variant="contained"
+                          color="secondary"
+                        >
+                          Login
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </>
+              )}
             </>
           )}
         </Grid>
@@ -317,12 +387,17 @@ const CheckPayment: React.FC<any> = (props) => {
 };
 
 const Checkout: React.FC<any> = (props) => {
-  const { user } = props;
+  const { user, checkUser } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
 
   const steps = [
-    <CheckLogin user={user} active={activeStep} setActive={setActiveStep} />,
+    <CheckLogin
+      user={user}
+      checkUser={checkUser}
+      active={activeStep}
+      setActive={setActiveStep}
+    />,
     <CheckDelivery active={activeStep} setActive={setActiveStep} />,
     <CheckPayment active={activeStep} setActive={setActiveStep} />,
   ];
@@ -351,7 +426,14 @@ const Checkout: React.FC<any> = (props) => {
   );
 };
 const mapStateToProps = (state: any) => ({
-  user: state.data.checkUser,
+  user: state.data.user,
 });
 
-export default connect(mapStateToProps, null)(Checkout);
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    checkUser: (loggedUser: any) =>
+      dispatch({ type: 'CHECK_USER', user: loggedUser }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

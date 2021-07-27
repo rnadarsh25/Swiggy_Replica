@@ -9,7 +9,7 @@ import storage from 'redux-persist/lib/storage';
 const persistConfig = {
   key: 'root',
   storage,
-  //   whitelist: ['order'],
+  blacklist: ['user'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -18,10 +18,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const sagaMiddleware = createSagaMiddleware();
 
 const middleware = [sagaMiddleware];
-export const store = createStore(
-  persistedReducer,
-  applyMiddleware(...middleware)
-);
+export const store = createStore(rootReducer, applyMiddleware(...middleware));
 
 sagaMiddleware.run(rootSaga);
 

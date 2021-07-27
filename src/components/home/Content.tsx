@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import {
   Grid,
   Paper,
@@ -9,6 +10,7 @@ import {
 } from '@material-ui/core';
 import ShowTabOneContent from './ShowTabOneContent';
 import ShowTabTwoContent from './ShowTabTwoContent';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,7 +25,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Content: React.FC = () => {
+const Content: React.FC<any> = (props) => {
+  const { restaurantDetails, getData } = props;
+
+  useEffect(() => {
+    getData();
+  });
+
   const [value, setValue] = useState(0);
   const handleTabChange = (event: any, newValue: number) => {
     setValue(newValue);
@@ -35,7 +43,7 @@ const Content: React.FC = () => {
       <Grid container>
         <Grid item xs={4}>
           <Typography variant="h4" className={classes.headingTypo}>
-            411 restaurants{' '}
+            {restaurantDetails.length} restaurants{' '}
           </Typography>
         </Grid>
         <Grid item xs={8} container justifyContent="flex-end">
@@ -48,18 +56,27 @@ const Content: React.FC = () => {
         </Grid>
         <Grid item xs={12} className={classes.contentGrid}>
           {value === 0 ? (
-            <ShowTabOneContent />
+            <ShowTabOneContent restaurantDetails={restaurantDetails} />
           ) : value === 1 ? (
-            <ShowTabTwoContent />
+            <ShowTabOneContent restaurantDetails={restaurantDetails} />
           ) : value === 2 ? (
-            'three'
+            <ShowTabOneContent restaurantDetails={restaurantDetails} />
           ) : (
-            'four'
+            <ShowTabOneContent restaurantDetails={restaurantDetails} />
           )}
         </Grid>
       </Grid>
     </div>
   );
 };
+const mapStateToProps = (state: any) => ({
+  restaurantDetails: state.data.allData,
+});
 
-export default Content;
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    getData: () => dispatch({ type: 'GET_DATA' }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Content);

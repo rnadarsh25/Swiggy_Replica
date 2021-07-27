@@ -16,11 +16,17 @@ import {
   Tab,
 } from '@material-ui/core';
 import ShowFoodItemsWithTab from './ShowFoodItemsWithTab';
-import ItemCard from '../useComponents/ItemCard';
+import ItemCard from './ItemCard';
+import StarRateIcon from '@material-ui/icons/StarRate';
 
 const useStyles = makeStyles(() => ({
   root: {
     marginTop: '3em',
+  },
+  root2: {
+    background: '',
+    padding: '.5em',
+    marginBottom: '1em',
   },
   cartGrid: {
     height: 'min-content',
@@ -105,33 +111,13 @@ const useStyles = makeStyles(() => ({
 export const FoodContext = React.createContext({});
 
 const FoodItems: React.FC<any> = (props) => {
-  const { id, menuDetails, getMenus, orderDetails } = props;
+  const { menuDetails, orderDetails, orderCart, addOrder } = props;
 
-  const [totalOrder, setTotalOrder] = useState([]);
-  const [menuItems, setMenuItems] = useState([]);
-  useEffect(() => {
-    getMenus(id);
-    setMenuItems(menuDetails);
-  }, []);
-
-  const {
-    id: menuId,
-    restaurantId,
-    category,
-    foodname,
-    price,
-    img,
-  } = menuDetails;
-
-  useEffect(() => {
-    console.log('Inside order');
-  }, []);
   const classes = useStyles();
-
-  // const { totalOrder, setTotalOrder } = useContext<any>(FoodContext);
+  const [totalOrder, setTotalOrder] = useState<any>([]);
 
   let setcategories = new Set();
-  menuItems.forEach((menu: any) => setcategories.add(menu.category));
+  menuDetails.forEach((menu: any) => setcategories.add(menu.category));
 
   const categories: string[] = [];
 
@@ -139,11 +125,26 @@ const FoodItems: React.FC<any> = (props) => {
 
   const [value, setValue] = useState(0);
   const [menu, setMenu] = useState(categories[0]);
+  const [myCheck, setMyCheck] = useState<number>(0);
+
+  let totalItems: number = 0;
+  let totalCost: number = 0;
+  let cartIdArr: number[] = [];
+  orderCart.forEach((cart: any) => {
+    cartIdArr[cart.id] = cart.count;
+    totalItems = totalItems + cart.count;
+    totalCost = totalCost + cart.count * cart.price;
+  });
+
+  useEffect(() => {
+    console.log('Updated', myCheck);
+  }, [myCheck]);
 
   const handleValueChange = (e: any, newValue: number) => {
     setValue(newValue);
     setMenu(categories[newValue]);
   };
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={9} container>
@@ -169,24 +170,27 @@ const FoodItems: React.FC<any> = (props) => {
                 {menu}
               </Typography>
               <Typography variant="body2" component="p" color="textSecondary">
-                17 items
+                {menuDetails.length} items
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              {menuItems.map((item: any, index: number) => (
+              {menuDetails.map((item: any, index: number) => (
                 <ItemCard
                   key={index}
                   item={item}
                   totalOrder={totalOrder}
                   setTotalOrder={setTotalOrder}
+                  addOrder={addOrder}
+                  myCheck={myCheck}
+                  setMyCheck={setMyCheck}
+                  cartIdArr={cartIdArr}
                 />
               ))}
             </Grid>
           </Grid>
         </Grid>
-        {/*<ShowFoodItemsWithTab menuDetails={menuItems} />*/}
       </Grid>
-      {orderDetails.length > 0 ? (
+      {orderCart.length > 0 && orderCart !== undefined ? (
         <Grid item xs={3} container className={classes.cartGrid}>
           <Grid item xs={12}>
             <CardHeader
@@ -195,11 +199,11 @@ const FoodItems: React.FC<any> = (props) => {
                   Cart
                 </Typography>
               }
-              subheader={`${orderDetails.length} Item`}
+              subheader={`${totalItems} Items`}
             />
           </Grid>
           <Grid item xs={12} container>
-            {orderDetails.map((order: any, index: number) => (
+            {orderCart.map((order: any, index: number) => (
               <Fragment key={index}>
                 <Grid
                   item
@@ -264,7 +268,7 @@ const FoodItems: React.FC<any> = (props) => {
                 />
                 <ListItemSecondaryAction>
                   <Typography variant="body2" component="p" color="textPrimary">
-                    Rs.1500
+                    Rs.{totalCost}
                   </Typography>
                 </ListItemSecondaryAction>
               </ListItem>
@@ -278,19 +282,36 @@ const FoodItems: React.FC<any> = (props) => {
             </Link>
           </Grid>
         </Grid>
-      ) : null}
+      ) : (
+        <Grid item xs={3} className={classes.root2}>
+          <Typography variant="h6" component="h6" color="textSecondary">
+            Cart
+          </Typography>
+          <img
+            src={
+              'https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_480/Cart_empty_-_menu_2x_ejjkf2'
+            }
+            width="200"
+            height="200"
+          />
+          <Typography variant="body2" component="p" color="textSecondary">
+            Good food is always cooking! Go ahead, order some yummy items from
+            the menu.
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 };
 
 const mapStateToProps = (state: any) => ({
-  menuDetails: state.data.menus,
-  orderDetails: state.data.order,
+  orderCart: state.data.order,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getMenus: (id: number) => dispatch({ type: 'GET_MENUS', theID: id }),
+    addOrder: (orderArr: any) =>
+      dispatch({ type: 'ADD_ORDER', order: orderArr }),
   };
 };
 

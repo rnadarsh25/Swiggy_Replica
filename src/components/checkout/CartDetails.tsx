@@ -25,6 +25,11 @@ const useStyles = makeStyles(() => ({
     boxShadow: '2px 2px 5px 0px rgba(0,0,0,.12)',
     marginBottom: '1em',
   },
+  root2: {
+    background: '',
+    padding: '.5em',
+    marginBottom: '1em',
+  },
   itemTypo: {
     paddingLeft: '1em',
   },
@@ -60,7 +65,6 @@ const useStyles = makeStyles(() => ({
 
 const CartDetails: React.FC<any> = (props) => {
   const { theRestaurant, orderCart } = props;
-  console.log(theRestaurant, orderCart);
 
   let totalCost: number = 0;
   let deliveryCharge: number = 51;
@@ -228,7 +232,22 @@ const CartDetails: React.FC<any> = (props) => {
           </Grid>
         </Grid>
       ) : (
-        'Cart is Empty'
+        <Grid item xs={12} className={classes.root2}>
+          <Typography variant="h6" component="h6" color="textSecondary">
+            Cart
+          </Typography>
+          <img
+            src={
+              'https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_480/Cart_empty_-_menu_2x_ejjkf2'
+            }
+            width="200"
+            height="200"
+          />
+          <Typography variant="body2" component="p" color="textSecondary">
+            Good food is always cooking! Go ahead, order some yummy items from
+            the menu.
+          </Typography>
+        </Grid>
       )}
       <Grid item xs={12} container className={classes.root}>
         <Card variant="outlined">

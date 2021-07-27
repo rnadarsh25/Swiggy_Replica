@@ -1,7 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import ImageWithSlide from './ImageWithSlide';
 import Content from './Content';
-const Home: React.FC = () => {
+import { useEffect } from 'react';
+const Home: React.FC<any> = (props) => {
   return (
     <div>
       <ImageWithSlide />
@@ -9,5 +11,4 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
 export default Home;
