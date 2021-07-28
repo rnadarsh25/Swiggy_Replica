@@ -22,6 +22,7 @@ import {
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
+  Badge,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
@@ -55,10 +56,10 @@ const useStyles = makeStyles(() => ({
     textDecoration: 'none',
   },
   drawer: {
-    width: '200px',
+    width: '20%',
   },
   cardRoot: {
-    maxWidth: '345',
+    maxWidth: '450px',
   },
   loginBtn: {
     background: 'orange',
@@ -67,6 +68,12 @@ const useStyles = makeStyles(() => ({
     fontWeight: 600,
     '&:hover': {
       background: 'orange',
+    },
+  },
+  accountTypo: {
+    color: 'orange',
+    '&:hover': {
+      cursor: 'pointer',
     },
   },
 }));
@@ -101,7 +108,15 @@ const allmenu: Menu[] = [
 ];
 
 const Header: React.FC<any> = (props) => {
-  const { user, checkUser, userDetails, addNewUser, logout } = props;
+  const {
+    user,
+    checkUser,
+    userDetails,
+    addNewUser,
+    logout,
+    orderCart,
+    totalCart,
+  } = props;
   const classes = useStyles();
   const [state, setState] = React.useState(false);
   const [userPhone, setUserPhone] = React.useState('');
@@ -153,7 +168,8 @@ const Header: React.FC<any> = (props) => {
             setState(false);
             setShowLogOptions(!showLogOptions);
           } else {
-            setnewUser(true);
+            setMsg('No User Found!!');
+            // setnewUser(true);
           }
         })
         .catch((err) => console.log(err));
@@ -167,21 +183,30 @@ const Header: React.FC<any> = (props) => {
 
   const handleRegister = (e: any) => {
     e.preventDefault();
-    const newUserData = {
-      name: newRegister.registerName,
-      email: newRegister.registerEmail,
-      mobile: newRegister.registerMobile,
-      id: uuidv4(),
-    };
+    if (
+      newRegister.registerEmail === '' ||
+      newRegister.registerMobile === '' ||
+      newRegister.registerName === '' ||
+      newRegister.registerMobile.length !== 10
+    ) {
+      setMsg('Invalid Input!');
+    } else {
+      const newUserData = {
+        name: newRegister.registerName,
+        email: newRegister.registerEmail,
+        mobile: newRegister.registerMobile,
+        id: uuidv4(),
+      };
 
-    addNewUser(newUserData);
-    setNewRegister({
-      registerEmail: '',
-      registerMobile: '',
-      registerName: '',
-    });
-    setState(!state);
-    setnewUser(false);
+      addNewUser(newUserData);
+      setNewRegister({
+        registerEmail: '',
+        registerMobile: '',
+        registerName: '',
+      });
+      setState(!state);
+      setnewUser(false);
+    }
   };
 
   const handleLogOut = () => {
@@ -189,6 +214,11 @@ const Header: React.FC<any> = (props) => {
     setShowLogOptions(!showLogOptions);
     setLoggedUser({});
     setState(!state);
+  };
+
+  const handleCreateAccount = () => {
+    setnewUser(!newUser);
+    setMsg('');
   };
 
   return (
@@ -209,7 +239,18 @@ const Header: React.FC<any> = (props) => {
             <Grid item xs={2} key={index}>
               {menu.name !== 'sign in' ? (
                 <Link to={menu.route} className={classes.link}>
-                  <Button startIcon={menu.icon} className={classes.menuButton}>
+                  <Button
+                    startIcon={
+                      menu.name === 'cart' ? (
+                        <Badge badgeContent={totalCart} color="secondary">
+                          {menu.icon}
+                        </Badge>
+                      ) : (
+                        menu.icon
+                      )
+                    }
+                    className={classes.menuButton}
+                  >
                     {menu.name}
                   </Button>
                 </Link>
@@ -271,7 +312,13 @@ const Header: React.FC<any> = (props) => {
                         Login
                       </Typography>
                       <Typography variant="body2" component="p">
-                        or Create an account
+                        or{' '}
+                        <span
+                          className={classes.accountTypo}
+                          onClick={handleCreateAccount}
+                        >
+                          Create an account
+                        </span>
                       </Typography>
                     </Grid>
                     <Grid item xs={3} container>
@@ -324,7 +371,13 @@ const Header: React.FC<any> = (props) => {
                       Register Now
                     </Typography>
                     <Typography variant="body2" component="p">
-                      or Already have Account? Login
+                      or Already have Account?{' '}
+                      <span
+                        onClick={() => setnewUser(!newUser)}
+                        className={classes.accountTypo}
+                      >
+                        Login
+                      </span>
                     </Typography>
                   </Grid>
                   <Grid item xs={3} container>
@@ -334,52 +387,54 @@ const Header: React.FC<any> = (props) => {
                       height="100"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      label="name"
-                      name="registerName"
-                      value={newRegister.registerName}
-                      onChange={handleInputChange}
-                      fullWidth
-                      variant="outlined"
-                      helperText={msg}
-                      placeholder="Enter Name"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      label="email"
-                      name="registerEmail"
-                      value={newRegister.registerEmail}
-                      onChange={handleInputChange}
-                      fullWidth
-                      variant="outlined"
-                      helperText={msg}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      label="Phone"
-                      name="registerMobile"
-                      value={newRegister.registerMobile}
-                      onChange={handleInputChange}
-                      fullWidth
-                      variant="outlined"
-                      helperText={msg}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      onClick={handleRegister}
-                      size="large"
-                      fullWidth
-                      className={classes.loginBtn}
-                    >
-                      Register
-                    </Button>
+                  <Grid item xs={12} container spacing={1}>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        label="name"
+                        name="registerName"
+                        value={newRegister.registerName}
+                        onChange={handleInputChange}
+                        fullWidth
+                        variant="outlined"
+                        helperText={msg}
+                        placeholder="Enter Name"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        label="email"
+                        name="registerEmail"
+                        value={newRegister.registerEmail}
+                        onChange={handleInputChange}
+                        fullWidth
+                        variant="outlined"
+                        helperText={msg}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        label="Phone"
+                        name="registerMobile"
+                        value={newRegister.registerMobile}
+                        onChange={handleInputChange}
+                        fullWidth
+                        variant="outlined"
+                        helperText={msg}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button
+                        onClick={handleRegister}
+                        size="large"
+                        fullWidth
+                        className={classes.loginBtn}
+                      >
+                        Register
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -395,6 +450,8 @@ const mapStateToProps = (state: any) => ({
   user: state.data.checkUser,
   userDetails: state.data.user,
   newUser: state.data.newUser,
+  orderCart: state.data.order,
+  totalCart: state.data.totalCart,
 });
 
 const mapDispatchToProps = (dispatch: any) => {

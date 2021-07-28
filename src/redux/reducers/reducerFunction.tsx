@@ -7,6 +7,8 @@ const initialState = {
   checkUser: false,
   newUser: false,
   user: {},
+  totalCart: 0,
+  search: [],
 };
 export default function (state = initialState, action: any) {
   switch (action.type) {
@@ -30,11 +32,21 @@ export default function (state = initialState, action: any) {
         ...state,
         order: action.value,
       };
+    case 'UPDATE_ORDER_ASYNC':
+      return {
+        ...state,
+        totalCart: action.value,
+      };
     case 'CHECK_USER_ASYNC':
       return {
         ...state,
         checkUser: true,
         user: action.value,
+      };
+    case 'SEARCH_ASYNC':
+      return {
+        ...state,
+        search: action.value,
       };
     case 'NEW_USER_ASYNC':
       return {

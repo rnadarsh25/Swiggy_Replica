@@ -17,6 +17,7 @@ import {
   newRegistration,
   getMenusFromStore,
   getRestaurantWithId,
+  searchItemsStore,
 } from '../api/getData';
 import { ListItemSecondaryAction } from '@material-ui/core';
 
@@ -91,6 +92,19 @@ function* addNewUserAsync(action: any): any {
   }
 }
 
+function* updateOrderAsync(action: any): any {
+  yield put({ type: 'UPDATE_ORDER_ASYNC', value: Number(action.cart) });
+}
+
+function* searchAsync(action: any): any {
+  try {
+    const items = yield searchItemsStore(action.search);
+    yield put({ type: 'SEARCH_ASYNC', value: items });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function* logoutAsync(): any {
   yield put({ type: 'LOGOUT_ASYNC' });
 }
@@ -104,5 +118,7 @@ export function* rootSaga() {
     takeEvery('CHECK_USER', checkUserAsync),
     takeLatest('ADD_NEW_USER', addNewUserAsync),
     takeLatest('LOGOUT', logoutAsync),
+    takeEvery('UPDATE_ORDER', updateOrderAsync),
+    takeEvery('SEARCH', searchAsync),
   ]);
 }

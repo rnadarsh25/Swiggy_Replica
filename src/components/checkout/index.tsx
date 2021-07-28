@@ -87,7 +87,37 @@ const useStyles = makeStyles((theme) => ({
     padding: '1em',
     marginBottom: '1em',
   },
+  loginCard: {
+    marginTop: '1em',
+  },
 }));
+
+const LoginCard: React.FC<any> = (props) => {
+  const { mobile, handleInputChange, handleLogin } = props;
+  const classes = useStyles();
+  return (
+    <Card variant="outlined" className={classes.loginCard}>
+      <CardContent>
+        <Typography variant="h6" component="h6">
+          Login here
+        </Typography>
+        <TextField
+          value={mobile}
+          onChange={handleInputChange}
+          fullWidth
+          variant="outlined"
+          margin="dense"
+          type="text"
+          placeholder="Enter Mobile"
+          required
+        />
+        <Button onClick={handleLogin} variant="contained" color="secondary">
+          Login
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
 
 const CheckLogin: React.FC<any> = (props) => {
   const { user, active, setActive, checkUser } = props;
@@ -122,8 +152,6 @@ const CheckLogin: React.FC<any> = (props) => {
         .catch((err) => console.log(err));
     }
   };
-
-  console.log(user);
   const classes = useStyles();
   if (user.name) {
     setActive(1);
@@ -169,32 +197,12 @@ const CheckLogin: React.FC<any> = (props) => {
                 </>
               ) : (
                 <>
-                  <Grid item xs={12} container spacing={1}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6" component="h6">
-                        Login here
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} container>
-                      <Grid item xs={12}>
-                        <TextField
-                          value={mobile}
-                          onChange={handleInputChange}
-                          fullWidth
-                          margin="normal"
-                          type="text"
-                          placeholder="Enter Mobile"
-                          required
-                        />
-                        <Button
-                          onClick={handleLogin}
-                          variant="contained"
-                          color="secondary"
-                        >
-                          Login
-                        </Button>
-                      </Grid>
-                    </Grid>
+                  <Grid item xs={12}>
+                    <LoginCard
+                      mobile={mobile}
+                      handleInputChange={handleInputChange}
+                      handleLogin={handleLogin}
+                    />
                   </Grid>
                 </>
               )}

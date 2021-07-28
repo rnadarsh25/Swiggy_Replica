@@ -66,9 +66,11 @@ const ItemCard: React.FC<any> = (props) => {
   } = props;
   const { id, restaurantId, category, foodname, price, img } = item;
   const classes = useStyles();
-  const [orderCount, setOrderCount] = useState(
-    cartIdArr[id] ? cartIdArr[id] : 0
-  );
+  const [orderCount, setOrderCount] = useState(0);
+
+  useEffect(() => {
+    setOrderCount(cartIdArr[id] ? cartIdArr[id] : 0);
+  }, [item]);
 
   const handleAddBtn = () => {
     setOrderCount(orderCount + 1);

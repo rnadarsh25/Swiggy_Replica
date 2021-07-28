@@ -15,6 +15,16 @@ export const getDataFromStore = async () => {
     items.push(doc.data());
   });
 
+  // const menuRef = await firebase
+  //   .firestore()
+  //   .collection('restaurants')
+  //   .doc('0')
+  //   .collection('menus');
+  // const menuRes = await menuRef.get();
+  // (await menuRes).forEach((doc) => {
+  //   console.log(doc.data());
+  // });
+
   return await items;
 };
 
@@ -39,6 +49,19 @@ export const getMenusFromStore = async (id: number) => {
     menuItems.push(doc.data());
   });
   return await menuItems;
+};
+
+export const searchItemsStore = async (search: string) => {
+  const items: any[] = [];
+  const ref = await firebase.firestore().collection('restaurants');
+  const res = await ref.startAt(search).endAt('\uf8ff').get();
+
+  (await res).forEach((doc) => {
+    console.log(doc.data);
+    items.push(doc.data());
+  });
+
+  return await items;
 };
 
 export const getUser = async (mobile: any) => {

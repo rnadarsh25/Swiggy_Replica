@@ -30,7 +30,7 @@ const Content: React.FC<any> = (props) => {
 
   useEffect(() => {
     getData();
-  });
+  }, []);
 
   const [value, setValue] = useState(0);
   const handleTabChange = (event: any, newValue: number) => {

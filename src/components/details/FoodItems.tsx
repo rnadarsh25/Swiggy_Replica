@@ -111,7 +111,14 @@ const useStyles = makeStyles(() => ({
 export const FoodContext = React.createContext({});
 
 const FoodItems: React.FC<any> = (props) => {
-  const { menuDetails, orderDetails, orderCart, addOrder } = props;
+  const {
+    menuDetails,
+    orderDetails,
+    orderCart,
+    addOrder,
+    updateOrder,
+    totalCart,
+  } = props;
 
   const classes = useStyles();
   const [totalOrder, setTotalOrder] = useState<any>([]);
@@ -130,14 +137,19 @@ const FoodItems: React.FC<any> = (props) => {
   let totalItems: number = 0;
   let totalCost: number = 0;
   let cartIdArr: number[] = [];
-  orderCart.forEach((cart: any) => {
-    cartIdArr[cart.id] = cart.count;
-    totalItems = totalItems + cart.count;
-    totalCost = totalCost + cart.count * cart.price;
-  });
+  if (orderCart.length !== 0) {
+    orderCart.forEach((cart: any) => {
+      cartIdArr[cart.id] = cart.count;
+      totalItems = totalItems + cart.count;
+      totalCost = totalCost + cart.count * cart.price;
+    });
+  }
 
   useEffect(() => {
     console.log('Updated', myCheck);
+    if (myCheck !== 0) {
+      updateOrder(totalItems);
+    }
   }, [myCheck]);
 
   const handleValueChange = (e: any, newValue: number) => {
@@ -199,7 +211,7 @@ const FoodItems: React.FC<any> = (props) => {
                   Cart
                 </Typography>
               }
-              subheader={`${totalItems} Items`}
+              subheader={`${totalCart} Items`}
             />
           </Grid>
           <Grid item xs={12} container>
@@ -306,12 +318,15 @@ const FoodItems: React.FC<any> = (props) => {
 
 const mapStateToProps = (state: any) => ({
   orderCart: state.data.order,
+  totalCart: state.data.totalCart,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     addOrder: (orderArr: any) =>
       dispatch({ type: 'ADD_ORDER', order: orderArr }),
+    updateOrder: (totalOrder: number) =>
+      dispatch({ type: 'UPDATE_ORDER', cart: totalOrder }),
   };
 };
 
