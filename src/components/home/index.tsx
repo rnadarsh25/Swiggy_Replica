@@ -5,7 +5,7 @@ import Content from './Content';
 import { useEffect } from 'react';
 const Home: React.FC<any> = (props) => {
   return (
-    <div style={{ background: 'red' }}>
+    <div style={{ background: 'red' }} onClick={() => console.log('Clicked')}>
       <ImageWithSlide />
       <Content />
     </div>
