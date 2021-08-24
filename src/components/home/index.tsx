@@ -5,7 +5,7 @@ import Content from './Content';
 import { useEffect } from 'react';
 const Home: React.FC<any> = (props) => {
   return (
-    <div>
+    <div style={{ background: 'red' }}>
       <ImageWithSlide />
       <Content />
     </div>
